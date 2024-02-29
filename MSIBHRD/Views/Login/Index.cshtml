@@ -1,0 +1,43 @@
+﻿@model MSIBHRD.Models.Login.LoginVM
+@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+@using (Html.BeginForm("Login", "Login", FormMethod.Post, new { id = "frmLogin" }))
+{
+    if (!string.IsNullOrEmpty(ViewBag.Error))
+    {
+        <div class="alert alert-danger alert-dismissible alert-label-icon rounded-label fade show" role="alert">
+            <i class="ri-error-warning-line label-icon"></i>@ViewBag.Error
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        @Html.TextBoxFor(m => m.Username, new { @class = "form-control", @placeholder = "Enter Username" })
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="password-input">Password</label>
+        <div class="position-relative auth-pass-inputgroup mb-5">
+            @Html.TextBoxFor(m => m.Password, new { @type = "password", @class = "form-control pe-5 password-input", @placeholder = "Enter Password" })
+            <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon" onclick="showPassword();"><i class="ri-eye-fill align-middle"></i></button>
+        </div>
+    </div>
+    <div class="mt-4 col-xl-12 mx-auto">
+        <button class="btn btn-success w-100" type="submit" id="btn-login" value="Login">Login</button>
+    </div>
+}
+@section scripts{
+    <script>
+        $(document).ready(function () {
+        });
+        function showPassword() {
+            var key_attr = $('#Password').attr('type');
+            if (key_attr != 'text') {
+                $('#Password').attr('type', 'text');
+            }
+            else {
+                $('#Password').attr('type', 'password');
+            }
+        }
+    </script>
+}
