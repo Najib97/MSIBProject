@@ -1,0 +1,84 @@
+﻿@model MSIBHRD.Models.Master.Department.DepartmentVM.Index
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+            <h4 class="mb-sm-0">Master  Department</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Master</a></li>
+                    <li class="breadcrumb-item active">Master Department</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+<button class="btn btn-primary" onclick="Tambah()">Tambah Baru</button>
+<!-- end page title -->
+<div class="card mt-2">
+	<div class="card-body">
+        <!-- Striped Rows -->
+        <table id="tbl" class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Nama Department</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.DepartemenList)
+                {
+                    <tr>
+                        <td>@item.IdDepartemen</td>
+                        <td>@item.NamaDepartemen</td>
+                        <td>
+                            <button type="button" class="btn btn-info" onclick="Edit('@item.IdDepartemen')">Edit</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+	</div>
+</div>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('#tbl').DataTable();
+        });
+        function Tambah() {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("Add")',
+                success: function (data) {
+                    $("#staticBackdrop .modal-title").html("Tambah");
+                    $("#staticBackdrop .modal-body").html(data);
+                    $("#staticBackdrop").modal('show');
+                }
+            });
+        }
+
+        function Edit(id) {
+            $.ajax({
+                type: "GET",
+                data: { id: id },
+                url: '@Url.Action("Edit")',
+                success: function (data) {
+                    if (data.Status === undefined) {
+                        $("#staticBackdrop .modal-title").html("Edit");
+                        $("#staticBackdrop .modal-body").html(data);
+                        $("#staticBackdrop").modal('show');
+                    }
+                    else {
+                        swal.fire({
+                            icon: 'warning',
+                            title: '<b style="color:orange">Peringatan</b>',
+                            text: data.Message
+                        })
+                    }
+                }
+            });
+        }
+    </script>
+}
