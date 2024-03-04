@@ -1,0 +1,102 @@
+﻿@model MSIBHRD.Models.Master.Posisi.PosisiVM.InsertPelamar
+
+<div class="row">
+    <div class="col-12 mb-3">
+        <div class="row">
+            <div class="col-12">
+                <label for="Nama" class="form-label">Nama Posisi</label>
+                <p>@Model.PosisiRow.NamaPosisi</p>
+            </div>
+        </div>
+        
+        <hr />
+
+        <form id="frmUpdatePelamar" class="needs-validation" novalidate asp-controller="Posisi" asp-action="UpdatePelamar" method="post" enctype="multipart/form-data">
+
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label for="Nama" class="form-label required-star">Nama Pelamar</label>
+                    @Html.TextBoxFor(x => x.NewRow.NamaPelamar, new { @class="form-control" })
+                </div>
+                <div class="col-12 mb-3">
+                    <div class="hstack gap-2 justify-content-end">
+                        <button type="button" class="btn btn-success" onclick="UpdatePelamar('@(Model.PosisiRow.IdPosisi)')">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <hr />
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>NAMA PELAMAR</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.PosisiRow.MPelamars)
+                            {
+                                <tr>
+                                    <td>@(item.IdPelamar)</td>
+                                    <td>@(item.NamaPelamar)</td>
+                                    <td></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+
+    function UpdatePelamar(id_posisi) {
+        var formData = new FormData($("#frmUpdatePelamar")[0]);
+        var t = $("input[name='__RequestVerificationToken']").val();
+
+        formData.append("IdPosisi", id_posisi);
+        $.ajax({
+            url: $("#frmUpdatePelamar").attr('action'),
+            type: "POST",
+            data: formData,
+            dataType: "json",
+            contentType: false,
+            processData: false,
+            headers:
+            {
+                "RequestVerificationToken": t
+            },
+            beforeSend: function () {
+                $("#loader").show()
+            },
+            complete: function () { $("#loader").hide(); },
+            success: function (resp) {
+                if (resp.status == 1) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '<b>Info</b>',
+                        text: resp.message,
+                    }).then((result) => {
+                        window.location.reload();
+                    })
+                }
+                else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '<b style="color:orange">Peringatan</b>',
+                        text: resp.message,
+                    })
+                }
+            }
+        })
+
+    }
+</script>
