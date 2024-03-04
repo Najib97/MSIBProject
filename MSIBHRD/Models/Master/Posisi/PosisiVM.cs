@@ -37,11 +37,28 @@ namespace MSIBHRD.Models.Master.Posisi
             }
         }
 
-        public class InsertPelamar
+        public class GetDataPelamar
         {
             public MPosisi PosisiRow { get; set; } = new MPosisi();
-            public MPelamar NewRow { get; set; } = new MPelamar();
+            public GetDataPelamar(ModelContext context, int id)
+            {
+                var mPosisi = context.MPosisis
+                    .Include(x => x.MPelamars)
+                    .Where(x => x.IdPosisi == id)
+                    .FirstOrDefault();
+
+                if (mPosisi != null)
+                {
+                    PosisiRow = mPosisi;
+                }
+            }
+        }
+
+        public class InsertPelamar
+        {
             public int IdPosisi { get; set; }
+            public MPosisi PosisiRow { get; set; } = new MPosisi();
+            public MPelamar NewRow { get; set; } = new MPelamar();
             public InsertPelamar()
             {
                 

@@ -28,35 +28,47 @@
 
         <hr />
 
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>NAMA PELAMAR</th>
-                                <th>ACTION</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.PosisiRow.MPelamars)
-                            {
-                                <tr>
-                                    <td>@(item.IdPelamar)</td>
-                                    <td>@(item.NamaPelamar)</td>
-                                    <td></td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
+        <div id="dataPelamar" style="display: none"></div>
     </div>
 </div>
 <script>
+    $(document).ready(function () {
+        getDataPelamar('@(Model.PosisiRow.IdPosisi)')
+    });
+
+    function getDataPelamar(id_posisi) {
+
+        var t = $("input[name='__RequestVerificationToken']").val();
+        $.ajax({
+            url: '@(Url.Action("GetDataPelamar","Posisi"))',
+            type: "GET",
+            data: { id: id_posisi },
+            headers:
+            {
+                "RequestVerificationToken": t
+            },
+            beforeSend: function () {
+                $("#loader").show()
+                $('#dataPelamar').hide();
+            },
+            complete: function () { $("#loader").hide(); },
+            success: function (resp) {
+                if (resp.status == undefined) {
+                    $('#dataPelamar').show();
+                    $('#dataPelamar').html(resp);
+                    $("#loader").hide()
+                }
+                else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '<b style="color:orange">Peringatan</b>',
+                        text: resp.message,
+                    })
+                    $("#loader").hide()
+                }
+            }
+        })
+    }
 
     function UpdatePelamar(id_posisi) {
         var formData = new FormData($("#frmUpdatePelamar")[0]);
@@ -85,7 +97,7 @@
                         title: '<b>Info</b>',
                         text: resp.message,
                     }).then((result) => {
-                        window.location.reload();
+                        getDataPelamar('@Model.PosisiRow.IdPosisi');
                     })
                 }
                 else {

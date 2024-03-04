@@ -1,0 +1,30 @@
+﻿@model MSIBHRD.Models.Master.Posisi.PosisiVM.GetDataPelamar
+@{
+
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>NAMA PELAMAR</th>
+                        <th>ACTION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.PosisiRow.MPelamars)
+                    {
+                        <tr>
+                            <td>@(item.IdPelamar)</td>
+                            <td>@(item.NamaPelamar)</td>
+                            <td></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
