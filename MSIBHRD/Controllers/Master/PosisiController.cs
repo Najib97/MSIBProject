@@ -88,7 +88,7 @@ namespace MSIBHRD.Controllers.Master
             catch (Exception ex)
             {
                 responseBase.Status = StatusEnum.Error;
-                responseBase.Message = "ERROR BRO";
+                responseBase.Message = ex.Message;
             }
 
             return Json(responseBase);

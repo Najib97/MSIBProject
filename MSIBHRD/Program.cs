@@ -9,6 +9,13 @@ builder.Services.AddDbContext<ModelContext>(options =>
 		options.UseMySql("server=localhost;port=3306;database=hrd;user=root",
 		Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.32-mariadb"))
 		);
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(20); 
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -22,6 +29,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+app.UseSession();
 app.UseRouting();
 
 app.UseAuthorization();

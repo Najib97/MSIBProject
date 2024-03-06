@@ -25,9 +25,11 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<THasilInterview> THasilInterviews { get; set; }
 
+    public virtual DbSet<User> Users { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("server=localhost;port=3306;database=hrd;user=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.32-mariadb"));
+        => optionsBuilder.UseMySql("server=localhost;database=hrd;user=root", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.32-mariadb"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -146,6 +148,35 @@ public partial class ModelContext : DbContext
             entity.HasOne(d => d.IdPelamarNavigation).WithMany(p => p.THasilInterviews)
                 .HasForeignKey(d => d.IdPelamar)
                 .HasConstraintName("t_hasil_interview_ibfk_1");
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("users");
+
+            entity.Property(e => e.Id)
+                .HasColumnType("int(11)")
+                .HasColumnName("id");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("current_timestamp()")
+                .HasColumnType("timestamp")
+                .HasColumnName("created_at");
+            entity.Property(e => e.Email)
+                .HasMaxLength(255)
+                .HasColumnName("email");
+            entity.Property(e => e.Password)
+                .HasMaxLength(32)
+                .HasColumnName("password");
+            entity.Property(e => e.UpdatedAt)
+                .ValueGeneratedOnAddOrUpdate()
+                .HasDefaultValueSql("current_timestamp()")
+                .HasColumnType("timestamp")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.Username)
+                .HasMaxLength(255)
+                .HasColumnName("username");
         });
 
         OnModelCreatingPartial(modelBuilder);
